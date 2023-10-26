@@ -1,33 +1,50 @@
 # This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
+import numpy as np
 import math
 import matplotlib.pyplot as plt
 
-alpha = 2
-beta = 3
-a = 0
-b = 1
-esp= 0.001
-def f(x, alpha, beta):
-    return math.exp(-alpha * x) + x ** beta
+# Press Shift+F10 to execute it or replace it with your code.
+# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+alpha=1
+beta = 2
+
+esp = 0.001
+while   alpha<6:
+        a = 0
+        b = 1
+        def f(x, alpha, beta):
+            return math.exp(-alpha * x) + x ** beta
 
 
-while (b - a) > esp:
-    # Trisect the interval
-    mid = (b - a) / 2
-    fl=f(mid-esp, alpha, beta)
-    fr=f(mid+esp, alpha, beta)
-    if f(mid-esp) < f(mid+esp):
-        a = mid
-    else:
-        b = mid
+        while (b - a) > esp:
+            # Trisect the interval
+            tri = (b - a) / 3
+            fl = f(a + tri, alpha, beta)
+            fr = f(b - tri, alpha, beta)
 
-x_min = (a + b) / 2
-min_value = f(x_min, alpha, beta)
+            if fl < fr:
+                b = b - tri
+            else:
+                a = a + tri
 
-print(f"The minimum of f(x) on [{a}, {b8}] with alpha={alpa} and beta={beta} is at x = { }, f(x) = {min_value}")
-plt.plot(x_min,min_value)
+        x_min = (a + b) / 2
+        min_value = f(x_min, alpha, beta)
+
+        x = np.arange(-2, 2, 0.1)
+        y = []
+        for t in x:
+            y1 = math.exp(-alpha * t) + t ** beta
+            y.append(y1)
+
+        print(f"The minimum of f(x) on [0, 1] with alpha={alpha} and beta={beta} is at x = {x_min}, f(x) = {min_value}")  # f bedeutet in ""kannst du auch vekor benutzen.
+        plt.plot(x, y, label=f"alpha={alpha} and beta={beta}")
+        plt.scatter(x_min, min_value,label="minimum", marker="o")
+
+        alpha=alpha+1
+
+plt.ylim(-0, 4)
+plt.xlabel("x")
+plt.ylabel("f(x)")
+plt.title(f"convex funtion with torelance={esp}")
+plt.legend()  # 'makieren'
 plt.show()
