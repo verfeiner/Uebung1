@@ -1,0 +1,36 @@
+import numpy as np
+import cv2
+from skimage import measure
+
+# Generate a test image with three overlapping circles
+image_size = 512
+image = np.zeros((image_size, image_size), dtype=np.uint8)
+
+# Define circle parameters
+radius = 80
+center1 = (150, 150)
+center2 = (250, 250)
+center3 = (350, 150)
+
+# Draw circles on the image
+cv2.circle(image, center1, radius, 255, -1)
+cv2.circle(image, center2, radius, 255, -1)
+cv2.circle(image, center3, radius, 255, -1)
+
+# Apply distance transform and negate the result
+dist_transform = cv2.distanceTransform(image, cv2.DIST_L2, 5)
+neg_dist_transform = cv2.bitwise_not(dist_transform.astype(np.uint8))
+
+# Apply watershed transform
+_, markers = cv2.connectedComponents(neg_dist_transform)
+markers = cv2.watershed(cv2.cvtColor(cv2.merge([image, image, image]), cv2.COLOR_BGR2RGB), markers)
+
+# Create a mask for segmented circles
+segmentation_mask = np.zeros_like(image)
+segmentation_mask[markers == -1] = 255
+
+# Display the results
+cv2.imshow("Original Image", image)
+cv2.imshow("Segmentation Mask", segmentation_mask)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
